@@ -7,7 +7,6 @@ def load_and_clean_data(df_raw):
     
     df = df_raw.copy()
         
-    # 1. Drop columns with all missing values
     df = df.dropna(axis='columns', how='all')
     
     # 2. Select numerical columns and filter out 'id' columns
@@ -17,9 +16,7 @@ def load_and_clean_data(df_raw):
         if "id" not in col.lower()
     ]
     
-    # 3. Select categorical columns
+
     categorical_cols = df.select_dtypes(include=['object']).columns
 
     return df, numerical_cols_filtered, categorical_cols
-
-# NOTE: No function call or variable assignments at the top level.
