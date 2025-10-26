@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# --- 0️⃣ Data Setup and Retrieval ---
+# --- Data Setup and Retrieval ---
 
 st.set_page_config(layout="wide")
 
@@ -12,17 +12,15 @@ if 'DF' not in st.session_state or 'NUMERICAL_COLS' not in st.session_state:
     st.warning("⚠️ Data not initialized. Please go back to the main page to load the data.")
     st.stop() 
 
-# Assign variables from session state
 DF = st.session_state['DF']
 NUMERICAL_COLS = st.session_state['NUMERICAL_COLS']
 
-# Create the subset DataFrame
 df_numerical = DF[NUMERICAL_COLS]
 
 st.title("📈 Numerical Variable Analysis")
 
 # -------------------------
-# 1️⃣ Sidebar: Select numerical columns
+# Sidebar: Select numerical columns
 # -------------------------
 
 st.sidebar.title("Numerical Plot Options")
@@ -64,24 +62,18 @@ else:
         with cols[col_index % 2]:
             st.subheader(f"Distribution: **{variable}**")
             
-            # --- INDIVIDUAL X-AXIS FILTER SETUP ---
-            # Calculate the true min/max for the current variable
             data_series = df_numerical[variable].dropna()
             
-            # Use max/min for the current variable
             min_var_val = data_series.min()
             max_var_val = data_series.max()
 
-            # Cap the max value for better slider usability, ensuring it's never less than the min
             max_val_safe = max(max_var_val, min_var_val + 1) if not pd.isna(max_var_val) else 10000
             if max_val_safe > 10000:
                  max_val_safe = 10000 
             
-            # Ensure proper float types for the slider inputs
             min_f = float(min_var_val) if not pd.isna(min_var_val) else 0.0
             max_f = float(max_val_safe)
-
-            # Create the unique slider for this variable
+            
             current_value_range = st.slider(
                 f'Select X-Axis Range for **{variable}**',
                 min_f,
@@ -93,8 +85,7 @@ else:
             )
             
             # --- PLOTTING LOGIC ---
-            
-            # Apply the filter based on the variable's unique slider values
+        
             data_filtered = data_series[
                 (data_series >= current_value_range[0]) & 
                 (data_series <= current_value_range[1])
@@ -104,18 +95,15 @@ else:
                  st.info("No data points fall within the selected X-axis range for this variable.")
                  col_index += 1
                  continue
-            
-            # Create a Matplotlib figure
+    
             fig, ax = plt.subplots(figsize=(10, 4))
             
-            # Create the boxplot using the filtered data
+ 
             sns.boxplot(x=data_filtered, ax=ax)
             
             ax.set_title(f"Boxplot of {variable}", fontsize=14)
             ax.set_xlabel(variable)
-            ax.set_yticks([]) 
-            
-            # Explicitly set the x-axis limits to match the variable's slider for consistent viewing
+            ax.set_yticks([])          
             ax.set_xlim(current_value_range) 
             
             st.pyplot(fig)
