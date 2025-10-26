@@ -44,24 +44,19 @@ elif len(selected_features) < 2:
 else:
     st.subheader(f"Correlation Matrix for {len(selected_features)} Selected Features")
 
-    # 1. Calculate Correlation Matrix
-    # We drop NaN values row-wise before calculation, as .corr() handles NaNs by default 
-    # but dropping them can sometimes be clearer for visualization.
     corr_matrix = DF[selected_features].corr()
 
-    # 2. Plot Heatmap
-    # Determine the size based on the number of features
     size = max(8, len(selected_features) * 0.8)
     
     fig, ax = plt.subplots(figsize=(size, size))
     
     sns.heatmap(
         corr_matrix, 
-        annot=True,              # Display correlation values on the plot
-        cmap='coolwarm',         # Choose a good diverging colormap
-        fmt='.2f',               # Format the annotations to two decimal places
-        linewidths=.5,           # Add lines between cells
-        cbar_kws={'label': 'Correlation Coefficient'}, # Label the color bar
+        annot=True,              
+        cmap='coolwarm',         
+        fmt='.2f',               
+        linewidths=.5,           
+        cbar_kws={'label': 'Correlation Coefficient'}, 
         ax=ax
     )
     
