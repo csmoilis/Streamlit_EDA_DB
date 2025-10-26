@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# --- 0️⃣ Data Setup and Retrieval ---
+# --- Data Setup and Retrieval ---
 
 st.set_page_config(layout="wide")
 
@@ -18,7 +18,7 @@ st.title("🏷️ Categorical Variable Analysis")
 st.info("This section is dedicated to exploring the distribution of discrete variables.")
 
 # -------------------------
-# 1️⃣ Sidebar: Select categorical column
+#  Sidebar: Select categorical column
 # -------------------------
 st.sidebar.title("Categorical Plot Options")
 
@@ -32,10 +32,7 @@ selected_cat_col = st.sidebar.selectbox(
 # -------------------------
 if selected_cat_col:
     st.subheader(f"Frequency Distribution: `{selected_cat_col}`")
-    
-    # Calculate value counts, limiting to the top 8 and including a count of missing (NaN) values
-    # If a variable has fewer than 8 categories, it will show all of them.
-    # We use dropna=False to explicitly count missing values.
+
     counts_full = DF[selected_cat_col].value_counts(dropna=False)
     
     # --- LIMIT TO TOP 8 CATEGORIES ---
@@ -46,20 +43,17 @@ if selected_cat_col:
     
     with col1:
         st.markdown("**Top 8 Categories (Including Missing)**")
-        # Rename the index for NaN values to make the DataFrame clearer
         counts_display = counts.rename(lambda x: 'Missing (NaN)' if pd.isna(x) else x)
         st.dataframe(counts_display)
         
-        # Display the number of unique values for context
+ 
         num_unique = DF[selected_cat_col].nunique(dropna=False)
         st.caption(f"Total unique categories (including missing): **{num_unique}**")
         st.caption(f"Displaying **{len(counts_display)}** of the top categories.")
 
     with col2:
-        # Create a bar plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot using the top 8 data
+
+        fig, ax = plt.subplots(figsize=(10, 6))       
         sns.barplot(x=counts_display.index, y=counts_display.values, ax=ax, palette="viridis")
         
         ax.set_title(f"Count Plot of {selected_cat_col} (Top 8)", fontsize=16)
